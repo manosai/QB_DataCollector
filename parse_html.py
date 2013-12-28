@@ -5,13 +5,14 @@ import os
 from bs4 import BeautifulSoup 
 import boto.sdb
 
-
+# AWS connection to SimpleDB
 def aws_connect():
 	conn = boto.sdb.connect_to_region('us-east-1',\
     		aws_access_key_id=os.environ['aws_access_key_id'], \
             aws_secret_access_key=os.environ['aws_secret_access_key'])
 	return conn
 
+# retrieve raw HTML and parse desired table 
 soup = BeautifulSoup(open("output.html"))
 results=[]
 table = soup.find("table", {"id":"scores"})
@@ -45,12 +46,13 @@ for result in results:
 		else:
 			receivers[result] = 1
 
-# build the json dictionary with the adjacency list
+# build an output list of json strings
 output_list = []
 for receiver in receivers.keys(): 
 	myDict = {
 	"name": receiver, 
 	"touchdowns": receivers[receiver], 
+	"quarterback": "Drew Brees", 
 	"type": "receiver"
 	}
 	output_list.append(myDict)
@@ -58,7 +60,10 @@ for receiver in receivers.keys():
 # store in SimpleDB
 conn = aws_connect()
 qb_domain = conn.get_domain('qb_table')
-qb_domain.put_attributes("Drew Brees", output_list[1])
+for receiver_attrs in output_list:
+	qb_domain.put_attributes(receiver_attrs['name'], receiver_attrs)
+
+
 
 
 
