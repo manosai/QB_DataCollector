@@ -13,6 +13,7 @@ def aws_connect():
 	return conn
 
 # retrieve raw HTML and parse desired table 
+qb_name = "Drew Brees"
 soup = BeautifulSoup(open("output.html"))
 results=[]
 table = soup.find("table", {"id":"scores"})
@@ -52,7 +53,7 @@ for receiver in receivers.keys():
 	myDict = {
 	"name": receiver, 
 	"touchdowns": receivers[receiver], 
-	"quarterback": "Drew Brees", 
+	"quarterback": qb_name, 
 	"type": "receiver"
 	}
 	output_list.append(myDict)
@@ -63,6 +64,15 @@ qb_domain = conn.get_domain('qb_table')
 for receiver_attrs in output_list:
 	qb_domain.put_attributes(receiver_attrs['name'], receiver_attrs)
 
+# sanity check for getting back the right output 
+query = 'select * from `qb_table` where quarterback="%s"' % qb_name
+rs = qb_domain.select(query)
+
+output = []
+for attrs in rs: 
+	output.append(attrs)
+print len(output)
+print json.dumps(output)
 
 
 
