@@ -1,3 +1,4 @@
+
 from bs4 import BeautifulSoup 
 import json 
 
@@ -33,7 +34,18 @@ for result in results:
 		# else - is not in the hashmap, add it 
 		else:
 			receivers[result] = 1
-print json.dumps(receivers)
+
+# build the json dictionary with the adjacency list
+output_list = []
+for receiver in receivers.keys(): 
+	myDict = {
+	"name": receiver, 
+	"touchdowns": receivers[receiver], 
+	"type": "receiver"
+	}
+	output_list.append(myDict)
+
+print json.dumps(output_list)
 
 
 
