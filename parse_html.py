@@ -1,6 +1,16 @@
 
-from bs4 import BeautifulSoup 
 import json 
+import os 
+
+from bs4 import BeautifulSoup 
+import boto.sdb
+
+
+def aws_connect():
+	conn = boto.sdb.connect_to_region('us-east-1',\
+    		aws_access_key_id=os.environ['aws_access_key_id'], \
+            aws_secret_access_key=os.environ['aws_secret_access_key'])
+	return conn
 
 soup = BeautifulSoup(open("output.html"))
 results=[]
@@ -45,7 +55,10 @@ for receiver in receivers.keys():
 	}
 	output_list.append(myDict)
 
-print json.dumps(output_list)
+# store in SimpleDB
+conn = aws_connect()
+qb_domain = conn.get_domain('qb_table')
+qb_domain.put_attributes("Drew Brees", output_list[1])
 
 
 
