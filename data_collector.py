@@ -21,26 +21,26 @@ def main(qb_name):
 	url = base_url + last_char + "/" + player_url + "touchdowns/passing/2013"
 	http = urllib3.PoolManager()
 	r = http.request('GET', url)
-	parse_html(r.data)
+	parse_html(r.data, qb_name)
 
 # get the relevant table text 
-def parse_html(html):
+def parse_html(html, qb_name):
 	soup = BeautifulSoup(html)
 	results=[]
 	table = soup.find("table", {"id":"scores"})
 	rows = table.findAll('tr')
 	lines=[]
 	for tr in rows:
-    	cols = tr.findAll('td')
-    	for td in cols:
-        	text=td.text.strip("\n")
+		cols = tr.findAll('td')
+		for td in cols: 
+			text=td.text.strip("\n")
 			lines.append(text)
 	text_table='\n'.join(lines)
-	results.append(text_table)
-	build_adjacency(results)
+	results.append(text_table) 
+	build_adjacency(results, qb_name)
 
 # build adjacency list mapping receivers to # of touchdowns
-def build_adjacency(results): 
+def build_adjacency(results, qb_name): 
 	receivers = {}
 	counter = 0
 	hit_first = False 
