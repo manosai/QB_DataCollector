@@ -59,15 +59,33 @@ def build_adjacency(results, qb_name):
 			else:
 				receivers[result] = 1
 
+	# calculate threshold for star label
+	num = len(receivers.keys())
+	total_tds = 0
+	for receiver in receivers.keys():
+		total_tds += receivers[receiver]
+	threshold = total_tds / num 
+
 	# format this into an output list of json strings
 	output_list = []
 	for receiver in receivers.keys(): 
-		myDict = {
-		"name": receiver, 
-		"touchdowns": receivers[receiver], 
-		"quarterback": qb_name, 
-		"type": "receiver"
-		}
+		# if above threshold, build dict with star set to true
+		if (receivers[receiver] >= threshold): 
+			myDict = {
+				"name": receiver, 
+				"touchdowns": receivers[receiver], 
+				"quarterback": qb_name, 
+				"type": "receiver",
+				"star": "true"
+			}
+		else: 
+			myDict = {
+				"name": receiver, 
+				"touchdowns": receivers[receiver], 
+				"quarterback": qb_name, 
+				"type": "receiver",
+				"star": "false"
+			}
 		output_list.append(myDict)
 	add_data(output_list)
 

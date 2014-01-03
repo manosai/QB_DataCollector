@@ -71,8 +71,8 @@ rs = qb_domain.select(query)
 output = []
 for attrs in rs: 
 	output.append(attrs)
-print len(output)
 print json.dumps(output)
+
 
 
 
