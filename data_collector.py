@@ -64,17 +64,13 @@ def build_adjacency(results, qb_name):
 	total_tds = 0
 	for receiver in receivers.keys():
 		total_tds += receivers[receiver]
-	print total_tds
-	print num
 	threshold = total_tds / num 
-	print threshold
 
 	# format this into an output list of json strings
 	output_list = []
 	for receiver in receivers.keys(): 
 		# if above threshold, build dict with star set to true
 		if (receivers[receiver] > threshold): 
-			print "we get here"
 			myDict = {
 				"name": receiver, 
 				"touchdowns": receivers[receiver], 
