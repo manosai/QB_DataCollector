@@ -92,7 +92,7 @@ def build_adjacency(results, qb_name):
 # store in SimpleDB
 def add_data(output_list):
 	conn = aws_connect()
-	qb_domain = conn.get_domain('qb_table')
+	qb_domain = conn.get_domain('qb_table_2013')
 	for receiver_attrs in output_list:
 		qb_domain.put_attributes(receiver_attrs['name'], receiver_attrs)
 
